@@ -1,0 +1,34 @@
+# Local secrets and machine-specific settings
+.env
+.env.*
+!.env.example
+config.json
+*.pem
+*.key
+
+# Browser login data and local task data
+/chrome-profile/
+/edge-profile*/
+/work/
+/tasks.xlsx
+/recordings/*.json
+
+# Dependencies, builds and generated reports
+node_modules/
+.venv/
+venv/
+/build/
+/dist/
+/release/*
+!/release/*.md
+/_metadata/
+/rules/generated_indexed_rulesets/
+/docx_qa_original/
+/docx_qa_variant/
+.test-artifacts/
+__pycache__/
+*.py[cod]
+*.log
+.pytest_cache/
+.DS_Store
+Thumbs.db

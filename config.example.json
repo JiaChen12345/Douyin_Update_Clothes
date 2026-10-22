@@ -1,0 +1,32 @@
+{
+  "excelPath": "./tasks.xlsx",
+  "workDir": "./work",
+  "browserProfileDir": "./edge-profile",
+  "browserExecutable": "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe",
+  "browserExtensionDir": "",
+  "storeMode": "dual",
+  "fixedWashLabelImage": "./assets/wash-lable.jpg",
+  "douyinHome": "https://fxg.jinritemai.com/",
+  "timeouts": {
+    "navigationMs": 60000,
+    "downloadMs": 180000,
+    "uploadMs": 180000,
+    "aiGenerationMs": 600000
+  },
+  "retryCount": 2,
+  "autoClosePopups": true,
+  "selectors": {
+    "douyin": {
+      "productMenuTexts": ["商品"],
+      "createProductTexts": ["商品创建", "创建商品"],
+      "localUploadTexts": ["本地上传"],
+      "nextGenerateTexts": ["下一步，生成商品", "下一步,生成商品"],
+      "confirmGenerateTexts": ["确认信息，继续生成"],
+      "detailSectionTexts": ["商品详情"],
+      "washLabelTexts": ["水洗标/吊牌图", "水洗标／吊牌图"],
+      "detailUploadTexts": ["上传图片"],
+      "saveDraftTexts": ["保存草稿"],
+      "successTexts": ["保存成功", "草稿保存成功"]
+    }
+  }
+}

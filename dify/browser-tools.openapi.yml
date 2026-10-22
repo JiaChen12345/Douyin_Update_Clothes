@@ -1,0 +1,381 @@
+openapi: 3.0.3
+info:
+  title: 抖店本地浏览器工具
+  description: Dify 编排现有抖店步骤；本服务仅保存草稿。截图和本地路径均由本机管理。
+  version: 1.0.0
+paths:
+  /health:
+    get:
+      summary: Health
+      operationId: browser_service_health
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /tasks:
+    post:
+      summary: Create Task
+      operationId: create_douyin_task
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTask'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      security:
+      - APIKeyHeader: []
+  /tasks/{task_id}:
+    get:
+      summary: Get Task
+      operationId: get_douyin_task
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: task_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Task Id
+      - name: wait_seconds
+        in: query
+        required: false
+        schema:
+          type: number
+          maximum: 15
+          minimum: 0
+          default: 0
+          title: Wait Seconds
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /tasks/{task_id}/advance:
+    post:
+      summary: Advance Task
+      operationId: run_next_douyin_step
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: task_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Task Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdvanceTask'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /tasks/{task_id}/resume:
+    post:
+      summary: Resume Task
+      operationId: resume_douyin_task
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: task_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Task Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /tasks/{task_id}/cancel:
+    post:
+      summary: Cancel Task
+      operationId: cancel_douyin_task
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: task_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Task Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /tasks/{task_id}/screenshots/{screenshot_id}.png:
+    get:
+      summary: Screenshot
+      operationId: get_current_target_screenshot
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: task_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Task Id
+      - name: screenshot_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Screenshot Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /tasks/{task_id}/vision:
+    post:
+      summary: Submit Target
+      operationId: submit_target_location
+      security:
+      - APIKeyHeader: []
+      parameters:
+      - name: task_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Task Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VisionResult'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+components:
+  schemas:
+    AdvanceTask:
+      properties:
+        stage:
+          type: string
+          maxLength: 40
+          minLength: 1
+          title: Stage
+      additionalProperties: false
+      type: object
+      required:
+      - stage
+      title: AdvanceTask
+    CreateTask:
+      properties:
+        request_id:
+          type: string
+          maxLength: 120
+          minLength: 8
+          pattern: ^[a-zA-Z0-9_-]+$
+          title: Request Id
+        platform:
+          type: string
+          title: Platform
+          default: 抖店
+        mode:
+          type: string
+          enum:
+          - demo
+          - live
+          title: Mode
+          default: demo
+        source_url:
+          type: string
+          maxLength: 3000
+          title: Source Url
+          default: ''
+        save_directory:
+          type: string
+          maxLength: 1000
+          title: Save Directory
+          default: ''
+        vision_enabled:
+          type: boolean
+          title: Vision Enabled
+          default: false
+        roi:
+          $ref: '#/components/schemas/Region'
+          nullable: true
+      additionalProperties: false
+      type: object
+      required:
+      - request_id
+      title: CreateTask
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    Region:
+      properties:
+        x:
+          type: number
+          minimum: 0.0
+          title: X
+        y:
+          type: number
+          minimum: 0.0
+          title: Y
+        width:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Width
+        height:
+          type: number
+          exclusiveMinimum: 0.0
+          title: Height
+        normalized:
+          type: boolean
+          title: Normalized
+          default: false
+      additionalProperties: false
+      type: object
+      required:
+      - x
+      - y
+      - width
+      - height
+      title: Region
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    VisionResult:
+      properties:
+        screenshot_id:
+          type: string
+          pattern: ^[a-f0-9]{32}$
+          title: Screenshot Id
+        found:
+          type: boolean
+          title: Found
+        target:
+          type: string
+          maxLength: 500
+          minLength: 1
+          title: Target
+        x:
+          title: X
+          type: number
+          nullable: true
+        y:
+          title: Y
+          type: number
+          nullable: true
+        confidence:
+          type: number
+          maximum: 1.0
+          minimum: 0.0
+          title: Confidence
+      additionalProperties: false
+      type: object
+      required:
+      - screenshot_id
+      - found
+      - target
+      - confidence
+      title: VisionResult
+  securitySchemes:
+    APIKeyHeader:
+      type: apiKey
+      in: header
+      name: X-Browser-Key
+servers:
+- url: https://your-browser-backend.example

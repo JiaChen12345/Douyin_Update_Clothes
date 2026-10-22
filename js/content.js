@@ -1,0 +1,1 @@
+chrome.runtime.sendMessage({cmd:"start"}),chrome.runtime.onMessage.addListener((function(e,t,m){window.postMessage(e,"*")})),chrome.runtime.id&&localStorage.setItem("zzbPlugId",chrome.runtime.id),chrome.runtime.id&&localStorage.setItem("zzbPlugName",chrome.runtime.getManifest().name),chrome.runtime.id&&localStorage.setItem("zzbNewPlugId",chrome.runtime.id);
